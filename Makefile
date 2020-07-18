@@ -1,6 +1,6 @@
 
 .PHONY: all
-all: out/param_hyper_year.rds
+all: out/param_hyper_year.csv
 
 
 out/data_df.rds: src/data_df.R \
@@ -20,7 +20,7 @@ out/model.est: src/model.R \
                out/count_all.rds
 	Rscript $<
 
-out/param_hyper_year.rds: src/param_hyper_year.R \
+out/param_hyper_year.csv: src/param_hyper_year.R \
                           out/model.est
 	Rscript $<
 

@@ -1,6 +1,7 @@
 
 library(demest)
 library(dplyr)
+library(readr)
 
 ## Functions to calculation method-of-moments estimates
 
@@ -18,9 +19,7 @@ param_beta <- function(y, min = 0.8, max = 1) {
     shape1 <- m * (m * (1 - m) / v - 1)
     shape2 <- (1 - m) * shape1
     c(shape1 = shape1,
-      shape2 = shape2,
-      min = min,
-      max = max)
+      shape2 = shape2)
 }
 
 
@@ -43,20 +42,17 @@ damp <- fetch("out/model.est",
     as.numeric()
 
 
-## Parameter estimates for hyper-parameters for year effec
+## Parameter estimates for hyper-parameters for year effect
 
-param_hyper_year <- list(scale = list(level = sd_half_norm(scale_level),
-                                      trend = sd_half_norm(scale_trend),
-                                      error = sd_half_norm(scale_error)),
-                         damp = param_beta(damp))
+param_hyper_year <- data.frame(parameter = c("level",
+                                             "trend",
+                                             "error",
+                                             "shape1",
+                                             "shape2"),
+                               value = c(sd_half_norm(scale_level),
+                                         sd_half_norm(scale_trend),
+                                         sd_half_norm(scale_error),
+                                         param_beta(damp)))
 
-saveRDS(param_hyper_year,
-        file = "out/param_hyper_year.rds")
-
-
-
-  
-  
-
-
-
+write_csv(param_hyper_year,
+          path = "out/param_hyper_year.csv")
